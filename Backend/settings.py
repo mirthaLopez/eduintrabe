@@ -11,36 +11,31 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from urllib.parse import urlparse
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-import os
-from urllib.parse import urlparse
-
+# Database URL from environment variable
 DATABASE_URL = os.getenv('DATABASE_URL')  # La variable de entorno configurada en Render
 url = urlparse(DATABASE_URL)
 
-
-
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-marzfgl9^zx2ssmv$!e0^__dm)d7$l2uc1i!)vecrgj%6hq$v_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['eduintra.onrender.com', 'localhost']
+# Corrected ALLOWED_HOSTS to include both domains
+ALLOWED_HOSTS = ['eduintra.onrender.com', 'eduintrabe.onrender.com', 'localhost', '127.0.0.1']
 
-
+# Allow all origins for CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
+    'api',  # Tu aplicación personalizada
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
@@ -58,9 +53,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    
 }
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -71,7 +64,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'Backend.urls'
@@ -94,12 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
-
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -111,10 +98,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -130,43 +114,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Para producción
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
-
-
-from datetime import timedelta
-
+# JWT Configuration
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),  # Duración del access token (1 minuto)
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=120),  # Duración del refresh token (1 minuto)
-    'ROTATE_REFRESH_TOKENS': True,  # Rotar los refresh tokens
-    'BLACKLIST_AFTER_ROTATION': True,  # Desactivar el refresh token anterior
-    'ALGORITHM': 'HS256',  # Algoritmo de firma (aunque no usaremos firma secreta)
-    'AUTH_HEADER_TYPES': ('Bearer',),  # Prefijo para el token
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=120),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
