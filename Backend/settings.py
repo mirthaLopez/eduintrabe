@@ -18,24 +18,19 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Database URL from environment variable
-DATABASE_URL = os.getenv('DATABASE_URL')  # La variable de entorno configurada en Render
-url = urlparse(DATABASE_URL)
-
-# Quick-start development settings - unsuitable for production
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY (mantén esto seguro en producción)
 SECRET_KEY = 'django-insecure-marzfgl9^zx2ssmv$!e0^__dm)d7$l2uc1i!)vecrgj%6hq$v_'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG debe ser False en producción
+DEBUG = False
 
-# Corrected ALLOWED_HOSTS to include both domains
-ALLOWED_HOSTS = ['eduintra.onrender.com', 'eduintrabe.onrender.com', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS: Añade tus dominios aquí
+ALLOWED_HOSTS = ['eduintrabe.onrender.com', 'localhost', '127.0.0.1']
 
-# Allow all origins for CORS
+# CORS Settings
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Application definition
+# Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,12 +44,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 ]
 
+# REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
+# Middleware
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +65,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Backend.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -86,7 +84,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Backend.wsgi.application'
 
-# Database configuration
+# Database Configuration (Railway MySQL)
+DATABASE_URL = "mysql://root:agCWsGNstQPRCZCcHZVcPfKUvvfwPXHj@autorack.proxy.rlwy.net:31526/railway"
+url = urlparse(DATABASE_URL)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -120,7 +121,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Para producción
 
